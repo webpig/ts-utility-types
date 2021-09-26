@@ -14,6 +14,18 @@ type Partial<T> = {
 }
 ```
 
-`Required` 类型强制所有属性必须都要有，所以需要把原有类型属性里的 `?` 操作符给去掉，这里使用 [`-`](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html#mapping-modifiers) 操作符即可。
+`Required` 类型强制所有属性必须都要有，所以需要把原有类型属性里的 `?` 操作符给去掉，这里使用 [`-`](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html#mapping-modifiers) 操作符即可：
 
-`Readonly` 类型规定属性只可读，不能修改。这里我们给每个属性加上 [`readonly`](https://www.typescriptlang.org/docs/handbook/2/objects.html#readonly-properties) 就行了。
+```ts
+type Required<T> = {
+    [P in keyof T]-?: T[P]
+}
+```
+
+`Readonly` 类型规定属性只可读，不能修改。这里我们给每个属性加上 [`readonly`](https://www.typescriptlang.org/docs/handbook/2/objects.html#readonly-properties) 就行了：
+
+```ts
+type Readonly<T> = {
+    readonly [P in keyof T]: T[P]
+}
+```
