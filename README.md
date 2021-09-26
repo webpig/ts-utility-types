@@ -1,5 +1,6 @@
 # ts-utility-types
-implement ts utility types.
+
+TypeScript Utility Types 实现。
 
 [utility-types 官方文档](https://www.typescriptlang.org/docs/handbook/utility-types.html)
 
