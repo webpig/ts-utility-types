@@ -105,3 +105,61 @@ const todoInfo: TodoInfo = {
 // text Extract
 type ExtractT0 = MyExtract<"a" | "b" | "c", "a" | "f">; // type ExtractT0 = 'a'
 type ExtractT1 = MyExtract<string | number | (() => void), Function>; // type ExtractT1 = () => void
+
+// test  NonNullable
+type NonNullableT0 = MyNonNullable<string | number | undefined>; // type NonNullableT0 = string | number
+type NonNullableT1 = MyNonNullable<string[] | null | undefined>; // type NonNullableT1 = string[]
+
+// test Parameters
+declare function f1(arg: { a: number; b: string }): void;
+ 
+type MyParametersT0 = Parameters<() => string>; // type MyParametersT0 = []
+type MyParametersT1 = Parameters<(s: string) => void>; // type MyParametersT1 = [s: string]
+type MyParametersT2 = Parameters<<T>(arg: T) => T>; // type MyParametersT2 = [arg: unknown]
+type MyParametersT3 = Parameters<typeof f1>; // type MyParametersT3 = [arg: { a: number, b: dtring }]
+type MyParametersT4 = Parameters<any>; // type MyParametersT4 = unknown[]
+type MyParametersT5 = Parameters<never>; // type MyParametersT5 = never
+type MyParametersT6 = Parameters<string>; // type MyParametersT6 = never
+type MyParametersT7 = Parameters<Function>; // type MyParametersT7 = never
+
+// type ConstructorParameters
+type ConstructorParametersT0 = MyConstructorParameters<ErrorConstructor>;
+type ConstructorParametersT1 = MyConstructorParameters<FunctionConstructor>;     
+type ConstructorParametersT2 = MyConstructorParameters<RegExpConstructor>;     
+type ConstructorParametersT3 = MyConstructorParameters<any>;
+type ConstructorParametersT4 = MyConstructorParameters<Function>;
+
+
+// test ReturnType
+declare function f1(): { a: number; b: string };
+ 
+type ReturnTypeT0 = MyReturnType<() => string>;
+type ReturnTypeT1 = MyReturnType<(s: string) => void>;
+type ReturnTypeT2 = MyReturnType<<T>() => T>;
+type ReturnTypeT3 = MyReturnType<<T extends U, U extends number[]>() => T>;
+type ReturnTypeT4 = MyReturnType<typeof f1>;
+type ReturnTypeT5 = MyReturnType<any>;
+type ReturnTypeT6 = MyReturnType<never>;
+type ReturnTypeT7 = MyReturnType<string>;
+type ReturnTypeT8 = MyReturnType<Function>;
+
+// test InstanceType
+class C {
+    x = 0;
+    y = 0;
+}
+   
+type InstanceTypeT0 = MyInstanceType<typeof C>;
+type InstanceTypeT1 = MyInstanceType<any>;
+type InstanceTypeT2 = MyInstanceType<never>;
+type InstanceTypeT3 = MyInstanceType<string>;
+type InstanceTypeT4 = MyInstanceType<Function>;
+
+// test ThisParameterType
+function toHex(this: Number) {
+    return this.toString(16);
+}
+   
+function numberToString(n: MyThisParameterType<typeof toHex>) {
+    return toHex.apply(n);
+}

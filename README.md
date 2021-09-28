@@ -4,8 +4,6 @@ TypeScript Utility Types 实现。
 
 [utility-types 官方文档](https://www.typescriptlang.org/docs/handbook/utility-types.html)
 
-### `Partial` 、`Required` 、`Readonly`
-
 `Partial` 、`Required` 、`Readonly` 实现的关键在于 [`keyof`](https://www.typescriptlang.org/docs/handbook/2/keyof-types.html) ，它能获取对象的所有键值的数字或者字符串字面量联合类型。
 
 ### `Partial<Type>`
@@ -84,4 +82,52 @@ type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>
 
 ```ts
 type Extract<T, U> = T extends U ? T : never
+```
+
+### `NonNullable<Type>`
+
+去除 `null` 和 `undefined` ：
+
+```ts
+type NonNullable<T> = T extends null | undefined ? never : T
+```
+
+### `Parameters<Type>`
+
+`Parameters` 用于提取函数中的参数作为 [`Tuple Type`](https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types)。由于传入的参数是不确定的，所以我们需要 [`infer`](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types) 来推断该类型：
+
+```ts
+type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never 
+```
+
+### `ConstructorParameters<Type>`
+
+和 `Parameters` 的区别在于，`ConstructorParameters` 需要参数为构造函数，使用 [`new`](https://www.typescriptlang.org/docs/handbook/2/functions.html#construct-signatures) 调用。支持 `abstract` 的详情：https://devblogs.microsoft.com/typescript/announcing-typescript-4-3/#constructor-parameters
+
+```ts
+type ConstructorParameters<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;
+```
+
+### `ReturnType<Type>`
+
+`ReturnType` 获取函数返回的类型，在返回处使用 `infer` 即可：
+
+```ts
+type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : never
+```
+
+### `InstanceType<Type>`
+
+返回实例的类型，在 `ReturnType` 基础上改造一下：
+
+```ts
+type InstanceType<Type extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : never
+```
+
+### `ThisParameterType<Type>`
+
+提取函数参数中的 [`this`](https://www.typescriptlang.org/docs/handbook/2/functions.html#declaring-this-in-a-function) ：
+
+```ts
+type ThisParameterType<T> = T extends (this: infer P, ...args: any[]) => any ? P : never
 ```
