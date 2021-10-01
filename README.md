@@ -129,5 +129,5 @@ type InstanceType<Type extends abstract new (...args: any) => any> = T extends a
 提取函数参数中的 [`this`](https://www.typescriptlang.org/docs/handbook/2/functions.html#declaring-this-in-a-function) ：
 
 ```ts
-type ThisParameterType<T> = T extends (this: infer P, ...args: any[]) => any ? P : never
+type ThisParameterType<T> = T extends (this: infer P, ...args: any[]) => any ? P : unknown
 ```
